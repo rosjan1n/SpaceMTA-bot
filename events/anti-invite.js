@@ -1,11 +1,14 @@
 const { EmbedBuilder } = require("@discordjs/builders");
 const { Events } = require("discord.js")
+const { whitelistRolesId } = require("../config/config.json")
 
 module.exports = {
     name: Events.MessageCreate,
     once: false,
     async execute(message) {
         if(!message.guild) return;
+        if(!message.member) return;
+        if(message.member.roles.cache.some((role) => whitelistRolesId.includes(role.id))) return;
 
         const embed = new EmbedBuilder()
             .setColor(15548997)

@@ -1,6 +1,10 @@
 {
-  "token": "MTE4OTk0MDUwNzYyODAxOTc1Mw.GCFrhI.2yb3CILn_s8ZYumRvUXcXlLxkNTK84cMzTnYsc",
-  "clientId": "1189940507628019753", 
-  "guildId": "888118164947353600",
-  "verifyRoleId": "918975967731544094"
+  "token": "MTE5MDAwMjA3MDM1NTQ2MDE3OQ.GToJh5.xEJNPMxmyzgSebNaG6wkigVzUc1h1pJhRtaTXk",
+  "clientId": "1190002070355460179", 
+  "guildId": "1175176064612446209",
+  "verifyRoleId": "1183139719157125304",
+  "welcomeChannelId": "1183135561758818335",
+  "whitelistRolesId": [
+    "1183178345236664330"
+  ]
 }
