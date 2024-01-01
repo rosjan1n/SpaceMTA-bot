@@ -18,6 +18,7 @@ module.exports = {
   once: false,
   async execute(interaction) {
     if (interaction.isCommand()) {
+      // verification handler
       if (interaction.commandName === "weryfikacja") {
         const { options } = interaction;
 
