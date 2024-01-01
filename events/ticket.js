@@ -7,10 +7,7 @@ const {
   PermissionsBitField,
   ChannelType,
 } = require("discord.js");
-const {
-  verifyRoleId,
-  ticketWhitelistRolesId,
-} = require("../config/config.json");
+const { ticketWhitelistRolesId } = require("../config/config.json");
 const fs = require("fs");
 
 module.exports = {
@@ -18,66 +15,13 @@ module.exports = {
   once: false,
   async execute(interaction) {
     if (interaction.isCommand()) {
-      // verification handler
-      if (interaction.commandName === "weryfikacja") {
+      if (interaction.commandName === "ticket") {
         const { options } = interaction;
 
         const selectedChannel = options.getChannel("kanal");
 
         const res = new EmbedBuilder()
-          .setColor(0x0099ff)
-          .setTitle("Weryfikacja")
-          .setDescription("Zweryfikuj się, wciskając przycisk poniżej.")
-          .setFooter({
-            text: "SpaceMTA - Weryfikacja",
-            iconURL:
-              "https://cdn.discordapp.com/attachments/1133444411603304520/1189956418997075978/space-travel_1.png?ex=65a00c46&is=658d9746&hm=8fb05b40294eb4948fbc882a6d3343d6ab9779500fe7302bf8f68178e26be51f&",
-          });
-
-        const verifyButton = new ButtonBuilder()
-          .setCustomId("verifyButton")
-          .setLabel("Zweryfikuj się")
-          .setStyle(ButtonStyle.Success);
-
-        const row = new ActionRowBuilder().addComponents(verifyButton);
-
-        try {
-          await selectedChannel.send({ embeds: [res], components: [row] });
-          res
-            .setTitle("Powodzenie!")
-            .setColor(5763719) // zielony
-            .setDescription("Pomyślnie wysłano panel do weryfikacji.")
-            .setTimestamp()
-            .setFooter({
-              text: "SpaceMTA - Weryfikacja",
-              iconURL:
-                "https://cdn.discordapp.com/attachments/1133444411603304520/1189956418997075978/space-travel_1.png?ex=65a00c46&is=658d9746&hm=8fb05b40294eb4948fbc882a6d3343d6ab9779500fe7302bf8f68178e26be51f&",
-            });
-
-          await interaction.reply({ embeds: [res], ephemeral: true });
-        } catch (error) {
-          if (error) {
-            res
-              .setColor(15548997) // czerwony
-              .setTitle("Wystąpił błąd!")
-              .setDescription("Nie wysłano panelu na kanał.")
-              .setTimestamp()
-              .setFooter({
-                text: "SpaceMTA - Weryfikacja",
-                iconURL:
-                  "https://cdn.discordapp.com/attachments/1133444411603304520/1189956418997075978/space-travel_1.png?ex=65a00c46&is=658d9746&hm=8fb05b40294eb4948fbc882a6d3343d6ab9779500fe7302bf8f68178e26be51f&",
-              });
-
-            await interaction.reply({ embeds: [res], ephemeral: true });
-          }
-        }
-      } else if (interaction.commandName === "ticket") {
-        const { options } = interaction;
-
-        const selectedChannel = options.getChannel("kanal");
-
-        const res = new EmbedBuilder()
-          .setColor(0x0099ff) // niebieski
+          .setColor([74, 148, 215]) // niebieski
           .setTitle("Utwórz ticket")
           .setDescription("Aby utworzyć ticket, wciśnij przycisk poniżej.")
           .setFooter({
@@ -97,7 +41,7 @@ module.exports = {
           await selectedChannel.send({ embeds: [res], components: [row] });
           res
             .setTitle(`Ticket`)
-            .setColor(5763719)
+            .setColor([0, 255, 0])
             .setDescription(
               `Panel został wysłany na kanał <#${selectedChannel.id}>.`
             )
@@ -111,7 +55,7 @@ module.exports = {
           await interaction.reply({ embeds: [res], ephemeral: true });
         } catch (error) {
           res
-            .setColor(15548997) // czerwony
+            .setColor([255, 0, 0]) // czerwony
             .setTitle("Wystąpił błąd!")
             .setDescription("Nie wysłano panelu na kanał.")
             .setTimestamp()
@@ -125,40 +69,7 @@ module.exports = {
         }
       }
     } else if (interaction.isButton()) {
-      if (interaction.customId === "verifyButton") {
-        const { member } = interaction;
-
-        const res = new EmbedBuilder()
-          .setColor(15548997)
-          .setTitle("Wystapił błąd!")
-          .setDescription(
-            "Wystapił błąd podczas nadawania roli. Spróbuj ponownie później."
-          )
-          .setFooter({
-            text: "SpaceMTA - Weryfikacja",
-            iconURL:
-              "https://cdn.discordapp.com/attachments/1133444411603304520/1189956418997075978/space-travel_1.png?ex=65a00c46&is=658d9746&hm=8fb05b40294eb4948fbc882a6d3343d6ab9779500fe7302bf8f68178e26be51f&",
-          });
-
-        if (!member.roles.cache.some((role) => role.id == verifyRoleId)) {
-          try {
-            await member.roles.add(verifyRoleId, "Weryfikacja");
-            res.setColor(5763719);
-            res.setTitle("Pomyślnie nadano role.");
-            res.setDescription(
-              "Nadano role możesz teraz korzystać z reszty kanałów."
-            );
-            await interaction.reply({ embeds: [res], ephemeral: true });
-          } catch (error) {
-            if (error) {
-              await interaction.reply({ embeds: [res], ephemeral: true });
-            }
-          }
-        } else {
-          res.setDescription("Zostałeś już zweryfikowany.");
-          await interaction.reply({ embeds: [res], ephemeral: true });
-        }
-      } else if (interaction.customId === "createTicket") {
+      if (interaction.customId === "createTicket") {
         const ticketsJson = fs.readFileSync("tickets.json");
         const ticketsData = JSON.parse(ticketsJson);
 
@@ -175,7 +86,7 @@ module.exports = {
 
         if (ticketExist) {
           const res = new EmbedBuilder()
-            .setColor(15548997)
+            .setColor([255, 0, 0])
             .setTitle("Wystąpił błąd")
             .setDescription(
               `Masz już otwarty ticket <#${ticketExist.channelId}>`
@@ -234,7 +145,7 @@ module.exports = {
 
           const res = new EmbedBuilder()
             .setTitle(`Ticket #${ticketId}`)
-            .setColor(5763719)
+            .setColor([0, 255, 0])
             .setDescription(
               `Twój ticket został pomyślnie stworzony. <#${newChannel.id}>`
             )
@@ -249,7 +160,7 @@ module.exports = {
 
           res
             .setTitle(`Ticket #${ticketId}`)
-            .setColor(0x0099ff)
+            .setColor([74, 148, 215])
             .setDescription(
               "Opisz swój problem, następnie cierpliwie oczekuj na odpowiedź od Naszego zespołu.\nPamiętaj, aby nikogo nie oznaczać."
             )
@@ -285,7 +196,7 @@ module.exports = {
         } catch (error) {
           console.log(error);
           const res = new EmbedBuilder()
-            .setColor(15548997)
+            .setColor([255, 0, 0])
             .setTitle("Wystąpił błąd")
             .setDescription("Spróbuj ponownie później.")
             .setTimestamp()
@@ -306,7 +217,7 @@ module.exports = {
           (ticket) => ticket.channelId == channelId
         );
         const res = new EmbedBuilder()
-          .setColor(15548997)
+          .setColor([255, 0, 0])
           .setTimestamp()
           .setFooter({
             text: "SpaceMTA - Ticket",
