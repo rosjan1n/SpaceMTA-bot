@@ -2,12 +2,7 @@ const { EmbedBuilder } = require("@discordjs/builders");
 const { Events } = require("discord.js");
 const mysql = require("mysql");
 
-const connection = mysql.createConnection({
-  host: "sql.23.svpj.link",
-  user: "db_99522",
-  database: "db_99522",
-  password: "yddX6wJMeLjM",
-});
+const connection = mysql.createConnection({});
 
 module.exports = {
   name: Events.InteractionCreate,
